@@ -5,17 +5,20 @@ A modern and feature-rich Todo application built with Flutter, featuring authent
 ## Features
 
 - 🔐 **Authentication**
+
   - Email/Password authentication
   - Google Sign-In integration
   - Secure user sessions
 
 - ✅ **Task Management**
+
   - Create, read, update, and delete tasks
   - Set due dates for tasks
   - Add detailed descriptions
   - Mark tasks as complete
 
 - 📊 **Task Organization**
+
   - Filter tasks by status (Pending, Finished, Overdue)
   - Automatic overdue task detection
   - Visual status indicators
@@ -31,12 +34,14 @@ A modern and feature-rich Todo application built with Flutter, featuring authent
 ## Screenshots
 
 ### Authentication
+
 <div align="center">
   <img src="screenshots/signin.png" alt="Sign In Screen" width="250"/>
   <img src="screenshots/signup.png" alt="Sign Up Screen" width="250"/>
 </div>
 
 ### Task Management
+
 <div align="center">
   <img src="screenshots/homepage.png" alt="Homepage with Tasks" width="250"/>
   <img src="screenshots/taskform.png" alt="Create Task Form" width="250"/>
@@ -54,27 +59,32 @@ A modern and feature-rich Todo application built with Flutter, featuring authent
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/todoapp.git
 ```
 
 2. Navigate to the project directory:
+
 ```bash
 cd todoapp
 ```
 
 3. Install dependencies:
+
 ```bash
 flutter pub get
 ```
 
 4. Configure Firebase:
+
    - Create a new Firebase project
    - Add Android/iOS apps to your Firebase project
    - Download and add the configuration files
    - Enable Email/Password and Google Sign-In in Firebase Console
 
 5. Run the app:
+
 ```bash
 flutter run
 ```
