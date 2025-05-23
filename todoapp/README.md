@@ -38,6 +38,7 @@ A modern and feature-rich Todo application built with Flutter, featuring authent
 <div align="center">
   <img src="screenshots/signin.png" alt="Sign In Screen" width="250"/>
   <img src="screenshots/signup.png" alt="Sign Up Screen" width="250"/>
+  <img src="screenshots/googlesigin.png" alt="Sign Up Screen" width="250"/>
 </div>
 
 ### Task Management
@@ -61,7 +62,7 @@ A modern and feature-rich Todo application built with Flutter, featuring authent
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/todoapp.git
+git clone https://github.com/omarahmeddsa/todoapp.git
 ```
 
 2. Navigate to the project directory:
@@ -132,6 +133,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
+Omar Hassan - [@Omar Hassan](https://github.com/omarahmeddsa)
 
-Project Link: [https://github.com/yourusername/todoapp](https://github.com/yourusername/todoapp)
+LinkedIn - [Omar Ahmed](https://www.linkedin.com/in/omar-ahmed-a769b9203)
+
+Project Link: [https://github.com/omarahmeddsa/todoapp](https://github.com/omarahmeddsa/todoapp)
