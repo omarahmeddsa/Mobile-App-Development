@@ -33,14 +33,19 @@ A modern and feature-rich Todo application built with Flutter, featuring authent
 
 ## Screenshots
 
-### Authentication & Task Management
+### Authentication
 
 <div align="center">
   <img src="screenshots/signin.png" alt="Sign In Screen" width="250"/>
   <img src="screenshots/signup.png" alt="Sign Up Screen" width="250"/>
   <img src="screenshots/googlesigin.png" alt="Sign Up Screen" width="250"/>
-  <img src="screenshots/homepage.png" alt="Homepage with Tasks" width="250"/>
-  <img src="screenshots/taskform.png" alt="Create Task Form" width="250"/>
+</div>
+
+### Task Management
+
+<div align="center">
+  <img src="screenshots/Homepage.png" alt="Homepage with Tasks" width="250"/>
+  <img src="screenshots/Taskform.png" alt="Create Task Form" width="250"/>
 </div>
 
 ## Getting Started
