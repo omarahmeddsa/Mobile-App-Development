@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import 'controller/expense_tracker_bloc.dart';
 import 'controller/expense_tracker_state.dart';
@@ -40,11 +41,13 @@ class _ExpenseTrackerScreenState extends State<ExpenseTrackerScreen> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   String _selectedCategory = 'Other';
+  final _dateController = TextEditingController();
 
   @override
   void dispose() {
     _titleController.dispose();
     _amountController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
 
@@ -55,13 +58,29 @@ class _ExpenseTrackerScreenState extends State<ExpenseTrackerScreen> {
         title: _titleController.text,
         amount: double.parse(_amountController.text),
         category: _selectedCategory,
+        date: _dateController.text,
       );
       context.read<ExpenseTrackerBloc>().add(ExpenseAdd(expense));
       _titleController.clear();
       _amountController.clear();
+      _dateController.clear();
       setState(() {
         _selectedCategory = 'Other';
       });
+    }
+  }
+
+  void _chooseDate() async {
+    final DateTime? datepicked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1980),
+      lastDate: DateTime(2030),
+    );
+
+    if (datepicked != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(datepicked);
+      _dateController.text = formattedDate;
     }
   }
 
@@ -126,6 +145,24 @@ class _ExpenseTrackerScreenState extends State<ExpenseTrackerScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
+                  TextFormField(
+                    onTap: _chooseDate,
+                    readOnly: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'please enter a date';
+                      } else {
+                        return null;
+                      }
+                    },
+                    controller: _dateController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      hintText: 'Select date',
+                      prefixIcon: Icon(Icons.date_range_rounded),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _addExpense,
                     child: const Text('Add Expense'),
@@ -153,19 +190,73 @@ class _ExpenseTrackerScreenState extends State<ExpenseTrackerScreen> {
                           horizontal: 16,
                           vertical: 8,
                         ),
-                        child: ListTile(
-                          title: Text(expense.title),
-                          subtitle: Text('Category: ${expense.category}'),
-                          trailing: Text(
-                            '\$${expense.amount.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                        child: Container(
+                          height: 150,
+                          child: ListTile(
+                            title: Text(expense.title),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Category: ${expense.category}'),
+                                Text('Date: ${expense.date}'),
+                              ],
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '\$${expense.amount.toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    context.read<ExpenseTrackerBloc>().add(
+                                      ExpenseRemove(expense.id),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       );
                     },
+                  );
+                } else if (state is ExpenseTrackerErrMsg) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Error: ${state.errMsg}',
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            context.read<ExpenseTrackerBloc>().add(
+                              ExpenseAdd(
+                                ExpenseModel(
+                                  id: '',
+                                  title: '',
+                                  amount: 0,
+                                  category: 'Other',
+                                  date: '',
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
                   );
                 }
                 return const Center(child: Text('Something went wrong'));

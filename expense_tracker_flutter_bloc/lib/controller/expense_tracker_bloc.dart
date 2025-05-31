@@ -16,6 +16,7 @@ class ExpenseTrackerBloc
           title: event.NewExpensemodel.title,
           amount: event.NewExpensemodel.amount,
           category: event.NewExpensemodel.category,
+          date: event.NewExpensemodel.date,
         );
 
         if (state is ExpenseTrackerUpdate) {
@@ -32,19 +33,18 @@ class ExpenseTrackerBloc
     });
 
     on<ExpenseRemove>((event, emit) {
-      try {
-        if (state is ExpenseTrackerUpdate) {
-          final currentState = state as ExpenseTrackerUpdate;
-          if (currentState.oldExpenseList.isNotEmpty) {
-            final updatedList = List<ExpenseModel>.from(
-              currentState.oldExpenseList,
-            );
-            updatedList.removeLast();
-            emit(ExpenseTrackerUpdate(oldExpenseList: updatedList));
-          }
+      if (state is ExpenseTrackerUpdate) {
+        final currentState = state as ExpenseTrackerUpdate;
+        try {
+          final updatedList =
+              currentState.oldExpenseList
+                  .where((expense) => expense.id != event.id)
+                  .toList();
+
+          emit(ExpenseTrackerUpdate(oldExpenseList: updatedList));
+        } catch (e) {
+          emit(ExpenseTrackerErrMsg(errMsg: e.toString()));
         }
-      } catch (e) {
-        emit(ExpenseTrackerErrMsg(errMsg: 'Failed to remove expense: $e'));
       }
     });
   }

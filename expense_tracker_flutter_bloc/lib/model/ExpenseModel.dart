@@ -6,12 +6,13 @@ class ExpenseModel extends Equatable {
   final String title;
   final double amount;
   final String category;
-
+  final String date;
   const ExpenseModel({
     required this.id,
     required this.title,
     required this.amount,
     required this.category,
+    required this.date,
   });
 
   @override
@@ -23,10 +24,17 @@ class ExpenseModel extends Equatable {
       title: data['title'] ?? '',
       amount: (data['amount'] ?? 0).toDouble(),
       category: data['category'] ?? 'Other',
+      date: data['date'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'title': title, 'amount': amount, 'category': category};
+    return {
+      'id': id,
+      'title': title,
+      'amount': amount,
+      'category': category,
+      'date': date,
+    };
   }
 }

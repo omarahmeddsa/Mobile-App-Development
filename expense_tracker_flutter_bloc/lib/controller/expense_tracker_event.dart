@@ -8,4 +8,7 @@ class ExpenseAdd extends ExpenseTrackerEvent {
   ExpenseAdd(this.NewExpensemodel);
 }
 
-class ExpenseRemove extends ExpenseTrackerEvent {}
+class ExpenseRemove extends ExpenseTrackerEvent {
+  final String id;
+  ExpenseRemove(this.id);
+}
