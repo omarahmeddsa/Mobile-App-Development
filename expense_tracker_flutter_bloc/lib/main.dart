@@ -1,12 +1,15 @@
+import 'package:expense_tracker_flutter_bloc/screens/homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
-import 'controller/expense_tracker_bloc.dart';
-import 'controller/expense_tracker_state.dart';
-import 'model/ExpenseModel.dart';
-
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: HydratedStorageDirectory(
+      (await getTemporaryDirectory()).path,
+    ),
+  );
   runApp(const MyApp());
 }
 
@@ -15,256 +18,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ExpenseTrackerBloc(),
-      child: MaterialApp(
-        title: 'Expense Tracker',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          useMaterial3: true,
-        ),
-        home: const ExpenseTrackerScreen(),
+    return MaterialApp(
+      title: 'Expense Tracker',
+      theme: ThemeData(
+        primaryColor: Color.fromRGBO(75, 218, 249, 1),
+        scaffoldBackgroundColor: Color.fromRGBO(27, 35, 57, 1),
       ),
-    );
-  }
-}
-
-class ExpenseTrackerScreen extends StatefulWidget {
-  const ExpenseTrackerScreen({super.key});
-
-  @override
-  State<ExpenseTrackerScreen> createState() => _ExpenseTrackerScreenState();
-}
-
-class _ExpenseTrackerScreenState extends State<ExpenseTrackerScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _amountController = TextEditingController();
-  String _selectedCategory = 'Other';
-  final _dateController = TextEditingController();
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _amountController.dispose();
-    _dateController.dispose();
-    super.dispose();
-  }
-
-  void _addExpense() {
-    if (_formKey.currentState?.validate() ?? false) {
-      final expense = ExpenseModel(
-        id: '',
-        title: _titleController.text,
-        amount: double.parse(_amountController.text),
-        category: _selectedCategory,
-        date: _dateController.text,
-      );
-      context.read<ExpenseTrackerBloc>().add(ExpenseAdd(expense));
-      _titleController.clear();
-      _amountController.clear();
-      _dateController.clear();
-      setState(() {
-        _selectedCategory = 'Other';
-      });
-    }
-  }
-
-  void _chooseDate() async {
-    final DateTime? datepicked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1980),
-      lastDate: DateTime(2030),
-    );
-
-    if (datepicked != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(datepicked);
-      _dateController.text = formattedDate;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Test Expense')),
-      body: Column(
-        children: [
-          // Simple form to add expense
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _titleController,
-                    decoration: const InputDecoration(labelText: 'Title'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a title';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _amountController,
-                    decoration: const InputDecoration(labelText: 'Amount'),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter an amount';
-                      }
-                      if (double.tryParse(value) == null) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                  ),
-                  DropdownButtonFormField<String>(
-                    value: _selectedCategory,
-                    decoration: const InputDecoration(labelText: 'Category'),
-                    items: const [
-                      DropdownMenuItem(value: 'Food', child: Text('Food')),
-                      DropdownMenuItem(
-                        value: 'Transport',
-                        child: Text('Transport'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Shopping',
-                        child: Text('Shopping'),
-                      ),
-                      DropdownMenuItem(value: 'Other', child: Text('Other')),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _selectedCategory = value;
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    onTap: _chooseDate,
-                    readOnly: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please enter a date';
-                      } else {
-                        return null;
-                      }
-                    },
-                    controller: _dateController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      hintText: 'Select date',
-                      prefixIcon: Icon(Icons.date_range_rounded),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _addExpense,
-                    child: const Text('Add Expense'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // List of expenses
-          Expanded(
-            child: BlocBuilder<ExpenseTrackerBloc, ExpenseTrackerState>(
-              builder: (context, state) {
-                if (state is ExpenseTrackerUpdate) {
-                  if (state.oldExpenseList.isEmpty) {
-                    return const Center(
-                      child: Text('No expenses yet. Add some!'),
-                    );
-                  }
-                  return ListView.builder(
-                    itemCount: state.oldExpenseList.length,
-                    itemBuilder: (context, index) {
-                      final expense = state.oldExpenseList[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        child: Container(
-                          height: 150,
-                          child: ListTile(
-                            title: Text(expense.title),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Category: ${expense.category}'),
-                                Text('Date: ${expense.date}'),
-                              ],
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  '\$${expense.amount.toStringAsFixed(2)}',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () {
-                                    context.read<ExpenseTrackerBloc>().add(
-                                      ExpenseRemove(expense.id),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                } else if (state is ExpenseTrackerErrMsg) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Error: ${state.errMsg}',
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            context.read<ExpenseTrackerBloc>().add(
-                              ExpenseAdd(
-                                ExpenseModel(
-                                  id: '',
-                                  title: '',
-                                  amount: 0,
-                                  category: 'Other',
-                                  date: '',
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text('Retry'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return const Center(child: Text('Something went wrong'));
-              },
-            ),
-          ),
-        ],
-      ),
+      home: const Expensehome(),
     );
   }
 }

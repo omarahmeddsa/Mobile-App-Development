@@ -12,3 +12,8 @@ class ExpenseRemove extends ExpenseTrackerEvent {
   final String id;
   ExpenseRemove(this.id);
 }
+
+class AddCashAmount extends ExpenseTrackerEvent {
+  double newCashAmount;
+  AddCashAmount({required this.newCashAmount});
+}
