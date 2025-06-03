@@ -1,7 +1,10 @@
+import 'package:expense_tracker_flutter_bloc/pagecontroller/navigationcontroller_cubit.dart';
 import 'package:expense_tracker_flutter_bloc/screens/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'controller/expense_tracker_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,13 +21,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Expense Tracker',
-      theme: ThemeData(
-        primaryColor: Color.fromRGBO(75, 218, 249, 1),
-        scaffoldBackgroundColor: Color.fromRGBO(27, 35, 57, 1),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ExpenseTrackerBloc>(
+          create: (context) => ExpenseTrackerBloc(),
+          child: Container(),
+        ),
+        BlocProvider<NavigationcontrollerCubit>(
+          create: (context) => NavigationcontrollerCubit(),
+          child: Container(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Expense Tracker',
+        theme: ThemeData(
+          primaryColor: Color.fromRGBO(75, 218, 249, 1),
+          scaffoldBackgroundColor: Color.fromRGBO(27, 35, 57, 1),
+        ),
+        home: const Expensehome(),
       ),
-      home: const Expensehome(),
     );
   }
 }
