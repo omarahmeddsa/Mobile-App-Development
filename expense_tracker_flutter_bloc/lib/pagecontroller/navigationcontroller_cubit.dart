@@ -7,14 +7,6 @@ class NavigationcontrollerCubit extends Cubit<NavigationcontrollerState> {
     : super(NavigationcontrollerInitial(pageIndex: 0));
 
   void changePageNumber(int pageIndex) {
-    switch (pageIndex) {
-      case 0:
-        emit(NavigationcontrollerUpdate(pageIndex));
-
-        break;
-      case 1:
-        emit(NavigationcontrollerUpdate(pageIndex));
-        break;
-    }
+    emit(NavigationcontrollerUpdate(pageIndex));
   }
 }

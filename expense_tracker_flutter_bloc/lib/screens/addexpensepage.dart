@@ -25,7 +25,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
-  String _selectedCategory = 'Other';
+  Category _selectedCategory = Category.other;
   final _dateController = TextEditingController();
 
   @override
@@ -50,7 +50,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
       _amountController.clear();
       _dateController.clear();
       setState(() {
-        _selectedCategory = 'Other';
+        _selectedCategory = Category.other;
       });
     }
   }
@@ -131,7 +131,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
+                  DropdownButtonFormField<Category>(
                     value: _selectedCategory,
                     decoration: const InputDecoration(
                       labelText: 'Category',
@@ -148,16 +148,22 @@ class _ExpenseFormState extends State<ExpenseForm> {
                     dropdownColor: Color.fromRGBO(27, 35, 57, 1),
                     style: const TextStyle(color: Colors.white),
                     items: const [
-                      DropdownMenuItem(value: 'Food', child: Text('Food')),
                       DropdownMenuItem(
-                        value: 'Transport',
+                        value: Category.food,
+                        child: Text('Food'),
+                      ),
+                      DropdownMenuItem(
+                        value: Category.transport,
                         child: Text('Transport'),
                       ),
                       DropdownMenuItem(
-                        value: 'Shopping',
+                        value: Category.shopping,
                         child: Text('Shopping'),
                       ),
-                      DropdownMenuItem(value: 'Other', child: Text('Other')),
+                      DropdownMenuItem(
+                        value: Category.other,
+                        child: Text('Other'),
+                      ),
                     ],
                     onChanged: (value) {
                       if (value != null) {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+
 import 'controller/expense_tracker_bloc.dart';
 
 void main() async {
@@ -25,18 +26,17 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<ExpenseTrackerBloc>(
           create: (context) => ExpenseTrackerBloc(),
-          child: Container(),
         ),
         BlocProvider<NavigationcontrollerCubit>(
           create: (context) => NavigationcontrollerCubit(),
-          child: Container(),
         ),
       ],
       child: MaterialApp(
         title: 'Expense Tracker',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Color.fromRGBO(75, 218, 249, 1),
-          scaffoldBackgroundColor: Color.fromRGBO(27, 35, 57, 1),
+          primaryColor: const Color.fromRGBO(75, 218, 249, 1),
+          scaffoldBackgroundColor: const Color.fromRGBO(27, 35, 57, 1),
         ),
         home: const Expensehome(),
       ),

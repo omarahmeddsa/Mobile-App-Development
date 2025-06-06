@@ -1,3 +1,4 @@
+import 'package:expense_tracker_flutter_bloc/model/ExpenseModel.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,13 +16,7 @@ class Expensehome extends StatefulWidget {
 }
 
 class _ExpensehomeState extends State<Expensehome> {
-  final List<Widget> _pages = [
-    const HomeContent(),
-    const AddExpenseWidget(),
-    const Center(
-      child: Text('Settings', style: TextStyle(color: Colors.white)),
-    ),
-  ];
+  final List<Widget> _pages = [const HomeContent(), const AddExpenseWidget()];
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +24,53 @@ class _ExpensehomeState extends State<Expensehome> {
     int _selectedIndex =
         context.watch<NavigationcontrollerCubit>().state.pageNumber;
     return Scaffold(
-      backgroundColor: Color.fromRGBO(27, 35, 57, 1),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Add'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+      backgroundColor: const Color.fromRGBO(27, 35, 57, 1),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: _pages[_selectedIndex],
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(27, 35, 57, 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          child: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined),
+                activeIcon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.add_circle_outline),
+                activeIcon: Icon(Icons.add_circle),
+                label: 'Add',
+              ),
+            ],
+            onTap: pageprovider.changePageNumber,
+            currentIndex: _selectedIndex,
+            selectedItemColor: const Color.fromRGBO(75, 218, 249, 1),
+            unselectedItemColor: Colors.grey,
+            backgroundColor: const Color.fromRGBO(27, 35, 57, 1),
+            elevation: 0,
+            type: BottomNavigationBarType.fixed,
+            selectedFontSize: 12,
+            unselectedFontSize: 12,
+            showUnselectedLabels: true,
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            unselectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.normal,
+            ),
           ),
-        ],
-        onTap: pageprovider.changePageNumber,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromRGBO(75, 218, 249, 1),
-        unselectedItemColor: Colors.grey,
-        backgroundColor: Color.fromRGBO(27, 35, 57, 1),
+        ),
       ),
     );
   }
@@ -131,17 +157,93 @@ class _BarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BarChart(
-      BarChartData(
-        barTouchData: barTouchData,
-        titlesData: titlesData,
-        borderData: borderData,
-        barGroups: barGroups,
-        gridData: const FlGridData(show: false),
-        alignment: BarChartAlignment.spaceAround,
-        backgroundColor: Color.fromRGBO(27, 35, 57, 1),
-      ),
+    return BlocBuilder<ExpenseTrackerBloc, ExpenseTrackerState>(
+      builder: (context, state) {
+        if (state is ExpenseTrackerUpdate) {
+          // Create a map to store category totals
+          final Map<Category, double> expenseAmounts = {};
+
+          // Initialize all categories with 0
+          for (var category in Category.values) {
+            expenseAmounts[category] = 0;
+          }
+
+          // Sum up amounts for each category
+          for (var expense in state.oldExpenseList) {
+            expenseAmounts[expense.category] =
+                (expenseAmounts[expense.category] ?? 0) + expense.amount;
+          }
+
+          return BarChart(
+            BarChartData(
+              barTouchData: barTouchData,
+              titlesData: titlesData,
+              borderData: borderData,
+              barGroups: _createBarGroups(expenseAmounts),
+              gridData: const FlGridData(show: false),
+              alignment: BarChartAlignment.spaceAround,
+              backgroundColor: Color.fromRGBO(27, 35, 57, 1),
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
+  }
+
+  List<BarChartGroupData> _createBarGroups(
+    Map<Category, double> expenseAmounts,
+  ) {
+    return [
+      BarChartGroupData(
+        x: 0,
+        barRods: [
+          BarChartRodData(
+            toY: expenseAmounts[Category.food] ?? 0,
+            gradient: _barsGradient,
+            width: 25,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ],
+        showingTooltipIndicators: [0],
+      ),
+      BarChartGroupData(
+        x: 1,
+        barRods: [
+          BarChartRodData(
+            toY: expenseAmounts[Category.shopping] ?? 0,
+            gradient: _barsGradient,
+            width: 25,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ],
+        showingTooltipIndicators: [0],
+      ),
+      BarChartGroupData(
+        x: 2,
+        barRods: [
+          BarChartRodData(
+            toY: expenseAmounts[Category.transport] ?? 0,
+            gradient: _barsGradient,
+            width: 25,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ],
+        showingTooltipIndicators: [0],
+      ),
+      BarChartGroupData(
+        x: 3,
+        barRods: [
+          BarChartRodData(
+            toY: expenseAmounts[Category.other] ?? 0,
+            gradient: _barsGradient,
+            width: 25,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ],
+        showingTooltipIndicators: [0],
+      ),
+    ];
   }
 
   BarTouchData get barTouchData => BarTouchData(
@@ -157,7 +259,7 @@ class _BarChart extends StatelessWidget {
         int rodIndex,
       ) {
         return BarTooltipItem(
-          rod.toY.round().toString(),
+          '\$${rod.toY.toStringAsFixed(2)}',
           const TextStyle(
             color: Color.fromRGBO(75, 218, 249, 1),
             fontWeight: FontWeight.bold,
@@ -262,55 +364,4 @@ class _BarChart extends StatelessWidget {
     begin: Alignment.bottomCenter,
     end: Alignment.topCenter,
   );
-
-  List<BarChartGroupData> get barGroups => [
-    BarChartGroupData(
-      x: 0,
-      barRods: [
-        BarChartRodData(
-          toY: 10,
-          gradient: _barsGradient,
-          width: 25,
-          borderRadius: BorderRadius.circular(4),
-        ),
-      ],
-      showingTooltipIndicators: [0],
-    ),
-    BarChartGroupData(
-      x: 1,
-      barRods: [
-        BarChartRodData(
-          toY: 60,
-          gradient: _barsGradient,
-          width: 25,
-          borderRadius: BorderRadius.circular(4),
-        ),
-      ],
-      showingTooltipIndicators: [0],
-    ),
-    BarChartGroupData(
-      x: 2,
-      barRods: [
-        BarChartRodData(
-          toY: 20,
-          gradient: _barsGradient,
-          width: 25,
-          borderRadius: BorderRadius.circular(4),
-        ),
-      ],
-      showingTooltipIndicators: [0],
-    ),
-    BarChartGroupData(
-      x: 3,
-      barRods: [
-        BarChartRodData(
-          toY: 25,
-          gradient: _barsGradient,
-          width: 20,
-          borderRadius: BorderRadius.circular(4),
-        ),
-      ],
-      showingTooltipIndicators: [0],
-    ),
-  ];
 }
