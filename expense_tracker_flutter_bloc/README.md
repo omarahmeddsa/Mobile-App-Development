@@ -15,13 +15,20 @@ A modern and intuitive expense tracking application built with Flutter and BLoC 
 ## Screenshots
 
 <div align="center">
-  <h3>Home Screen</h3>
-  <img src="screenshots/home_screen.png" alt="Home Screen" width="300" height="600">
-  <p><em>Main dashboard showing expense chart and list of expenses</em></p>
-
-  <h3>Add Expense Screen</h3>
-  <img src="screenshots/add_expense.png" alt="Add Expense" width="300" height="600">
-  <p><em>Form to add new expenses with category selection</em></p>
+  <table>
+    <tr>
+      <td align="center">
+        <h3>Home Screen</h3>
+        <img src="screenshots/home_screen.png" alt="Home Screen" width="250" height="500">
+        <p><em>Main dashboard showing expense chart and list of expenses</em></p>
+      </td>
+      <td align="center">
+        <h3>Add Expense Screen</h3>
+        <img src="screenshots/add_expense.png" alt="Add Expense" width="250" height="500">
+        <p><em>Form to add new expenses with category selection</em></p>
+      </td>
+    </tr>
+  </table>
 </div>
 
 ## Getting Started
