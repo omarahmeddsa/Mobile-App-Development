@@ -16,11 +16,17 @@ A modern and intuitive expense tracking application built with Flutter and BLoC 
 
 ### Home Screen
 ![Home Screen](screenshots/home_screen.png)
-*Main dashboard showing expense chart and list of expenses*
+*Main dashboard showing expense chart and list of expenses (Recommended size: 300x600px)*
 
 ### Add Expense Screen
 ![Add Expense](screenshots/add_expense.png)
-*Form to add new expenses with category selection*
+*Form to add new expenses with category selection (Recommended size: 300x600px)*
+
+> **Note**: For optimal display on GitHub, please ensure your screenshots are:
+> - Width: 300-400 pixels
+> - Height: 500-600 pixels
+> - Format: PNG or JPG
+> - File size: Under 500KB each
 
 ## Getting Started
 
