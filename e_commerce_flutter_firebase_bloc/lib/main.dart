@@ -1,9 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:untitled/features/auth/logic/auth_cubit.dart';
 
 import 'core/theme/dark_mode/dark_mode_data.dart';
 import 'features/home/presentation/screens/signinscreen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -12,11 +17,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: darkModeData(),
+    return BlocProvider(
+      create: (context) => AuthCubit(),
+      child: MaterialApp(
+        theme: darkModeData(),
 
-      debugShowCheckedModeBanner: false,
-      home: Signinscreen(),
+        debugShowCheckedModeBanner: false,
+        home: Signinscreen(),
+      ),
     );
   }
 }
