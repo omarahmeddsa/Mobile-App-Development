@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:untitled/features/auth/data/authbase.dart';
 
 import '../../../auth/logic/auth_cubit.dart';
 import '../../../auth/logic/auth_state.dart';
 import '../screens/signinscreen.dart';
 
-class Signupwidget extends StatelessWidget {
+class Signupwidget extends StatefulWidget {
   Signupwidget({super.key});
 
+  @override
+  State<Signupwidget> createState() => _SignupwidgetState();
+}
+
+class _SignupwidgetState extends State<Signupwidget> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _firstNameController = TextEditingController();
+
   final TextEditingController _LastNameController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   String email = '';
+
   String password = '';
+
   @override
   Widget build(BuildContext context) {
-    authbase UserInstance = authbase(
-      firstname: _firstNameController.text,
-      lastname: _LastNameController.text,
-      email: email,
-      password: password,
-      status: AuthStatus.loading,
-    );
-
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
         return Scaffold(
@@ -94,9 +96,9 @@ class Signupwidget extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       TextFormField(
+                        obscureText: true,
                         controller: _passwordController,
                         onChanged: (value) {
-
                           password = value;
                         },
                         validator:
@@ -114,10 +116,11 @@ class Signupwidget extends StatelessWidget {
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () {
-                            if (!formKey.currentState!.validate()) {
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
                               // Handle sign-in logic here
-                              context.read<AuthCubit>().SignUp(UserInstance);
+                              print({_emailController.text});
+                              context.read<AuthCubit>().signUp(email, password);
                             }
                           },
                           child: Text('Sign Up'),

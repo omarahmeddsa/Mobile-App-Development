@@ -6,43 +6,23 @@ enum AuthStatus { initialState, signedIn, signedOut, loading, initial }
 
 class authbase {
   FirebaseAuth auth = FirebaseAuth.instance;
-  String firstname;
-  String lastname;
+
   String email;
   String password;
-  AuthStatus status = AuthStatus.signedOut;
+
+  AuthStatus status = AuthStatus.initialState;
   FirebaseAuthException? error;
   User? user;
 
-  authbase({
-    required this.firstname,
-    required this.lastname,
-    required this.email,
-    required this.password,
-    this.user,
-    required this.status,
-  });
+  authbase({required this.email, required this.password, this.user});
 
   Map<String, dynamic> toJson() {
-    return {
-      'firstname': firstname,
-      'lastname': lastname,
-      'email': email,
-      'password': password,
-      'status': status,
-      'user': user,
-      'error': error?.message ?? 'No error',
-    };
+    return {'email': email, 'password': password};
   }
 
   void formJson(Map<String, dynamic> json) {
-    firstname = json['firstname'];
-    lastname = json['lastname'];
     email = json['email'];
     password = json['password'];
-    status = json['status'];
-    user = json['user'];
-    error = json['error'] ?? 'No error';
   }
 
   Future<void> resetPassword(String email) async {

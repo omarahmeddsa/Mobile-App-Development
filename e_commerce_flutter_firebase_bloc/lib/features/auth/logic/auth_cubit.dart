@@ -6,66 +6,91 @@ import 'package:untitled/features/auth/logic/auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
-  void SigIn(authbase cred) async {
+  void signIn(String email, String password) async {
     emit(AuthInitial());
+    authbase userInstance = authbase(email: email, password: password);
     try {
       // Simulate a sign-in process
-      await Future.delayed(Duration(seconds: 2));
-      UserCredential? credential = await cred.signIn(cred.email, cred.password);
+      User? user;
+      UserCredential? credential = await userInstance.signIn(
+        userInstance.email,
+        userInstance.password,
+      );
+      user = credential?.user;
+      emit(AuthLoading(user, userInstance.status));
     } on FirebaseAuthException catch (e) {
-      emit(AuthFailure(e, cred));
+      emit(AuthFailure(e, userInstance.status));
     }
   }
 
-  void SignOut(authbase cred) async {
-    emit(AuthLoading(cred));
+  void signOut(authbase cred) async {
+    emit(AuthInitial());
+
     try {
       await cred.auth.signOut();
       emit(AuthInitial());
     } on FirebaseAuthException catch (e) {
-      emit(AuthFailure(e, cred));
+      emit(AuthFailure(e, AuthStatus.signedOut));
     }
   }
 
-  void SignUp(authbase cred) async {
-    emit(AuthLoading(cred));
+  void signUp(String email, String password) async {
+    emit(AuthInitial());
+    authbase userInstance = authbase(email: email, password: password);
+    User? user;
     try {
-      // Simulate a sign-up process
-      await Future.delayed(Duration(seconds: 2));
-      UserCredential? credential = await cred.signUp(cred.email, cred.password);
-      emit(AuthInitial());
+      UserCredential? credential = await userInstance.signUp(
+        userInstance.email,
+        userInstance.password,
+      );
+      user = credential?.user;
+      if (credential != null) {
+        userInstance.status = AuthStatus.signedIn;
+        userInstance.user = credential.user;
+        emit(AuthLoading(user, userInstance.status));
+      } else {
+        emit(
+          AuthFailure(
+            FirebaseAuthException(
+              code: 'signup-failed',
+              message: 'Failed to create account',
+            ),
+            AuthStatus.signedOut,
+          ),
+        );
+      }
     } on FirebaseAuthException catch (e) {
-      emit(AuthFailure(e, cred));
+      emit(AuthFailure(e, AuthStatus.signedOut));
     }
   }
 
-  void ResetPassword(authbase cred, String email) async {
-    emit(AuthLoading(cred));
+  void resetPassword(authbase cred, String email) async {
     try {
       await cred.resetPassword(cred.email);
-      emit(AuthInitial());
     } on FirebaseAuthException catch (e) {
-      emit(AuthFailure(e, cred));
+      emit(AuthFailure(e, AuthStatus.signedOut));
     }
   }
 
-  void FacebookSignIn(authbase cred) async {
-    emit(AuthLoading(cred));
+  void facebookSignIn() async {
+    emit(AuthInitial());
+    authbase userInstance = authbase(email: '', password: '');
     try {
-      UserCredential? credential = await cred.signInWithFacebook();
-      emit(AuthInitial());
+      UserCredential? credential = await userInstance.signInWithFacebook();
+      emit(AuthLoading(credential.user, userInstance.status));
     } on FirebaseAuthException catch (e) {
-      emit(AuthFailure(e, cred));
+      emit(AuthFailure(e, userInstance.status));
     }
   }
 
-  void GoogleSignIn(authbase cred) async {
-    emit(AuthLoading(cred));
+  void googleSignIn(authbase cred) async {
+    emit(AuthInitial());
+    authbase userInstance = authbase(email: '', password: '');
     try {
-      UserCredential? credential = await cred.signInWithGoogle();
+      await cred.signInWithGoogle();
       emit(AuthInitial());
     } on FirebaseAuthException catch (e) {
-      emit(AuthFailure(e, cred));
+      emit(AuthFailure(e, userInstance.status));
     }
   }
 }

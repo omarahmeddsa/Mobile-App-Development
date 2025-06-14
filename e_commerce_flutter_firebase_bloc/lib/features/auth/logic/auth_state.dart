@@ -3,32 +3,38 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:untitled/features/auth/data/authbase.dart';
 
 sealed class AuthState extends Equatable {
-  final authbase Cred;
+  final AuthStatus status;
 
-  AuthState(this.Cred);
+  const AuthState(this.status);
 
   @override
-  List<Object?> get props => [Cred];
+  List<Object?> get props => [status];
 }
 
 class AuthInitial extends AuthState {
-  AuthInitial()
-    : super(
-        authbase(
-          firstname: '',
-          lastname: '',
-          email: '',
-          password: '',
-          status: AuthStatus.initialState,
-        ),
-      );
+  const AuthInitial() : super(AuthStatus.initial);
 }
 
 class AuthLoading extends AuthState {
-  AuthLoading(authbase Cred) : super(Cred);
+  final User? user;
+
+  const AuthLoading(this.user, AuthStatus status) : super(status);
+
+  @override
+  List<Object?> get props => [user, status];
+}
+
+class AuthSignedOut extends AuthState {
+  const AuthSignedOut(AuthStatus status) : super(status);
+
+  List<Object?> get props => [status];
 }
 
 class AuthFailure extends AuthState {
-  FirebaseAuthException error;
-  AuthFailure(this.error, authbase Cred) : super(Cred);
+  final FirebaseAuthException error;
+
+  const AuthFailure(this.error, AuthStatus status) : super(status);
+
+  @override
+  List<Object?> get props => [error, status];
 }

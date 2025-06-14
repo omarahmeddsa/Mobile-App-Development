@@ -7,6 +7,6 @@ class Signinscreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Signinwidget();
+    return signinwidget();
   }
 }

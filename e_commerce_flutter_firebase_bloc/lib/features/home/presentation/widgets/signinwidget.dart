@@ -1,15 +1,23 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../auth/data/authbase.dart';
+import '../../../auth/logic/auth_cubit.dart';
 import '../screens/signupscreen.dart';
 import 'forgotpasswidget.dart';
 
-class Signinwidget extends StatelessWidget {
-  Signinwidget({super.key});
+class signinwidget extends StatelessWidget {
+  signinwidget({super.key});
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
+
+  String email = '';
+
+  String password = '';
+
   @override
   Widget build(BuildContext context) {
+    authbase UserInstance = authbase(email: email, password: password);
+
     return Scaffold(
       body: Column(
         children: [
@@ -28,7 +36,8 @@ class Signinwidget extends StatelessWidget {
                   ),
                   SizedBox(height: 30),
                   TextFormField(
-                    controller: _emailController,
+                    onChanged: (value) => email = value,
+
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
@@ -40,6 +49,7 @@ class Signinwidget extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
+                    onChanged: (value) => password = value,
                     validator:
                         (value) =>
                             value == null || value.isEmpty
@@ -55,16 +65,12 @@ class Signinwidget extends StatelessWidget {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (!formKey.currentState!.validate()) {
+                      onPressed: () async {
+                        // await UserInstance.signIn(UserInstance.email, UserInstance.password);
+                        if (formKey.currentState!.validate()) {
                           // Handle sign-in logic here
-                          if (kDebugMode) {
-                            print('Sign In Successful');
-                          }
-                        } else {
-                          if (kDebugMode) {
-                            print('Validation Failed');
-                          }
+                          context.read<AuthCubit>().signIn(email, password);
+                          print({UserInstance.status});
                         }
                       },
                       child: Text('Sign In'),
