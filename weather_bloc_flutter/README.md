@@ -1,16 +1,16 @@
-# Expense Tracker App
+# Weather BLoC Flutter App
 
-A modern and intuitive expense tracking application built with Flutter and BLoC pattern. This app helps users manage their daily expenses with a beautiful UI and powerful features.
+A modern and intuitive weather application built with Flutter and the BLoC pattern. This app provides real-time weather updates based on your current location, featuring a beautiful and responsive UI.
 
 ## Features
 
-- 📊 **Expense Overview**: Visual representation of expenses through bar charts
-- 💰 **Add Expenses**: Easy expense entry with categories and dates
-- 📱 **Modern UI**: Clean and intuitive user interface
-- 🎨 **Dark Theme**: Eye-friendly dark mode design
-- 📈 **Category-wise Analysis**: Track expenses by different categories
+- 🌦️ **Current Weather**: Get real-time weather information for your current location
+- 📍 **Location-based Forecast**: Automatically fetches weather using device location
+- 🎨 **Modern UI**: Clean, animated, and visually appealing interface
+- 🌙 **Dark Theme**: Eye-friendly dark mode design
 - 🔄 **State Management**: Efficient state management using BLoC pattern
-- 💾 **Data Persistence**: Local storage of expense data
+- 🌡️ **Detailed Metrics**: Temperature, weather type, sunrise, sunset, min/max temperature
+- 🖼️ **Custom Weather Icons**: Beautiful weather icons for different conditions
 
 ## Screenshots
 
@@ -19,13 +19,8 @@ A modern and intuitive expense tracking application built with Flutter and BLoC 
     <tr>
       <td align="center">
         <h3>Home Screen</h3>
-        <img src="screenshots/home_screen.png" alt="Home Screen" width="250" height="500">
-        <p><em>Main dashboard showing expense chart and list of expenses</em></p>
-      </td>
-      <td align="center">
-        <h3>Add Expense Screen</h3>
-        <img src="screenshots/add_expense.png" alt="Add Expense" width="250" height="500">
-        <p><em>Form to add new expenses with category selection</em></p>
+        <img src="screenshots/WeatherUI.png" alt="Home Screen" width="250" height="500">
+        <p><em>Main dashboard showing current weather and details</em></p>
       </td>
     </tr>
   </table>
@@ -43,21 +38,25 @@ A modern and intuitive expense tracking application built with Flutter and BLoC 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
-git clone https://github.com/yourusername/expense_tracker_flutter_bloc.git
+git clone https://github.com/yourusername/weather_bloc_flutter.git
 ```
 
 2. Navigate to the project directory:
+
 ```bash
-cd expense_tracker_flutter_bloc
+cd weather_bloc_flutter
 ```
 
 3. Install dependencies:
+
 ```bash
 flutter pub get
 ```
 
 4. Run the app:
+
 ```bash
 flutter run
 ```
@@ -65,49 +64,48 @@ flutter run
 ## Dependencies
 
 - `flutter_bloc`: ^9.1.1 - State management
-- `hydrated_bloc`: ^10.0.0 - Persistent state management
-- `fl_chart`: ^1.0.0 - Chart visualization
-- `uuid`: ^4.5.1 - Unique ID generation
+- `equatable`: ^2.0.7 - Value equality for Dart objects
+- `http`: ^1.4.0 - HTTP requests
+- `geolocator`: ^14.0.2 - Location services
+- `weather`: ^3.2.1 - Weather API integration
 - `intl`: ^0.20.2 - Internationalization and formatting
-- `path_provider`: ^2.1.2 - File system access
+- `flutter_spinkit`: ^5.2.1 - Loading indicators
+- `cupertino_icons`: ^1.0.8 - iOS style icons
 
 ## Project Structure
 
 ```
 lib/
-├── controller/
-│   ├── expense_tracker_bloc.dart
-│   ├── expense_tracker_event.dart
-│   └── expense_tracker_state.dart
-├── model/
-│   └── ExpenseModel.dart
-├── pagecontroller/
-│   ├── navigationcontroller_cubit.dart
-│   └── navigationcontroller_state.dart
+├── bloc/
+│   ├── weather_bloc.dart
+│   ├── weather_event.dart
+│   └── weather_state.dart
+├── models/
 ├── screens/
-│   ├── homepage.dart
-│   └── addexpensepage.dart
+│   └── homescreen.dart
+├── service/
+│   └── locationrepo.dart
+├── assets/
+│   └── [weather icons/images]
+├── widgets/
 └── main.dart
 ```
 
 ## Features in Detail
 
-### Expense Tracking
-- Add expenses with title, amount, category, and date
-- View expenses in a list format
-- Delete expenses with a single tap
-- Categorize expenses (Food, Shopping, Transport, Other)
+### Weather Information
 
-### Data Visualization
-- Bar chart showing expenses by category
-- Interactive chart with tooltips
-- Real-time updates when adding/removing expenses
+- Fetches current weather based on device location
+- Displays temperature, weather type, city, country, sunrise, sunset, min/max temperature
+- Shows date and time in a user-friendly format
+- Custom weather icons for different conditions
 
 ### User Interface
-- Bottom navigation for easy access to main features
-- Animated transitions between screens
-- Responsive design that works on all screen sizes
-- Intuitive form for adding new expenses
+
+- Modern, animated, and responsive design
+- Dark theme for comfortable viewing
+- Loading indicators for data fetching
+- Error handling for location and network issues
 
 ## Contributing
 
