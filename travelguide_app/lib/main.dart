@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travelguide_app/screens/signin.dart';
+import 'package:travelguide_app/screens/signup.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(),
       ),
       debugShowCheckedModeBanner: false,
-      home: signin(),
+      home: signup(),
     );
   }
 }

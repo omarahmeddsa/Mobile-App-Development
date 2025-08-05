@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class signin extends StatelessWidget {
-  const signin({super.key});
+class signup extends StatelessWidget {
+  const signup({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class signin extends StatelessWidget {
                 children: [
                   RichText(
                     text: TextSpan(
-                      text: 'Sign-In',
+                      text: 'Sign Up',
                       style: TextStyle(
                         fontSize: 50,
                         color: Colors.black,
@@ -43,6 +43,16 @@ class signin extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 30),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Enter your username',
+                      labelText: 'username',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
                   TextFormField(
                     decoration: InputDecoration(
                       hintText: 'Enter your email',
@@ -74,68 +84,13 @@ class signin extends StatelessWidget {
                     child: TextButton(
                       onPressed: () {},
                       child: Text(
-                        "Continue",
+                        "Create Account",
                         style: TextStyle(fontSize: 30, color: Colors.white),
                       ),
                     ),
                   ),
 
                   SizedBox(height: 35),
-
-                  Text(
-                    '--------  Or  --------',
-                    style: TextStyle(fontSize: 25, color: Colors.black26),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.black38, width: 2),
-                    ),
-                    width: 350,
-                    height: 60,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.apple, size: 40, color: Colors.black),
-                          Text(
-                            ' Sign in with Apple',
-                            style: TextStyle(fontSize: 20, color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.black38, width: 2),
-                    ),
-                    width: 350,
-                    height: 60,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.g_mobiledata_sharp,
-                            size: 40,
-                            color: Colors.red,
-                          ),
-                          Text(
-                            ' Sign in with Google',
-                            style: TextStyle(fontSize: 20, color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
